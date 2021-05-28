@@ -33,38 +33,38 @@ const refs = {
 const createGalleryList = createItemGalleryList(gallery);
 refs.galleryList.insertAdjacentHTML('beforeend', createGalleryList);
 
-// ===============Click on Img========================
+
 refs.galleryList.addEventListener('click', onImgClickOpenModalWindow);
 
-// ===============Click on CloseBtn===================
 
-// refs.closeModalBtn.addEventListener('click', closeModalBtn);
-
-// ===============Click on Keyboard key-arrow===========
 const arreyOfImgSrc = gallery.map(({ original }) => original);
 
-// ================All close Events===================
 
-// =======================All functons================
+window.addEventListener('keydown', onKeydownEsc);
+  refs.overlay.addEventListener('click', onClickCloseModal);
+  window.addEventListener('keydown', onKeydownArrow);
+
+
 
 function onKeydownArrow(e) {
   e.preventDefault();
   const currentIndex = arreyOfImgSrc.indexOf(refs.modalImg.src);
   let count;
-  if (e.key === 'ArrowRight') {
+  if (e.code === 'ArrowRight') {
     count = currentIndex + 1;
     // console.log(currentIndex);
     if (count >= arreyOfImgSrc.length) {
       count = 0;
     };
-  } else if (e.key === 'ArrowLeft') {
+    refs.modalImg.src = arreyOfImgSrc[count];
+  };
+  if (e.code === 'ArrowLeft') {
     count = currentIndex - 1;
     if (count === -1) {
       count = arreyOfImgSrc.length - 1;
     };
-    
+    refs.modalImg.src = arreyOfImgSrc[count];
   };
-  refs.modalImg.src = arreyOfImgSrc[count];
 };
 
 
@@ -102,9 +102,7 @@ function onImgClickOpenModalWindow(e) {
   refs.modalImg.src = `${e.target.dataset.source}`;
   refs.modalImg.alt = `${e.target.alt}`;
   refs.closeModalBtn.addEventListener('click', onClickCloseModal);
-  window.addEventListener('keydown', onKeydownEsc);
-  refs.overlay.addEventListener('click', onClickCloseModal);
-  window.addEventListener('keydown', onKeydownArrow);
+  
 
 };
 
