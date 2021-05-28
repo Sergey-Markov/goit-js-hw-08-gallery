@@ -42,20 +42,29 @@ refs.galleryList.addEventListener('click', onImgClickOpenModalWindow);
 
 // ===============Click on Keyboard key-arrow===========
 const arreyOfImgSrc = gallery.map(({ original }) => original);
-console.log(arreyOfImgSrc);
+
 // ================All close Events===================
-window.addEventListener('keydown', onKeydownArrow);
+
 // =======================All functons================
 
 function onKeydownArrow(e) {
   e.preventDefault();
-  const currentIndex = arreyOfImgSrc.indexOf(e.target.href);
-  
+  const currentIndex = arreyOfImgSrc.indexOf(refs.modalImg.src);
+  let count;
   if (e.key === 'ArrowRight') {
-    if (currentIndex >= arreyOfImgSrc.length - 1) refs.modalImg.src = arreyOfImgSrc[0];
+    count = currentIndex + 1;
+    // console.log(currentIndex);
+    if (count >= arreyOfImgSrc.length) {
+      count = 0;
+    };
+  } else if (e.key === 'ArrowLeft') {
+    count = currentIndex - 1;
+    if (count === -1) {
+      count = arreyOfImgSrc.length - 1;
+    };
     
-    refs.modalImg.src = arreyOfImgSrc[currentIndex +1];
   };
+  refs.modalImg.src = arreyOfImgSrc[count];
 };
 
 
@@ -66,10 +75,11 @@ function onKeydownEsc(e) {
     refs.modalWindov.classList.remove('is-open');
     refs.modalImg.src = ``;
     refs.modalImg.alt = ``;
+    refs.closeModalBtn.removeEventListener('click', onClickCloseModal);
+    refs.overlay.removeEventListener('click', onClickCloseModal);
+    window.removeEventListener('keydown', onKeydownArrow);
     window.removeEventListener('keydown', onKeydownEsc);
   };
-  console.log(e.key);
-
 };
 
 function onClickCloseModal(e) {
@@ -79,18 +89,22 @@ function onClickCloseModal(e) {
   refs.modalImg.alt = ``;
   refs.closeModalBtn.removeEventListener('click', onClickCloseModal);
   refs.overlay.removeEventListener('click', onClickCloseModal);
+  window.removeEventListener('keydown', onKeydownArrow);
+  window.removeEventListener('keydown', onKeydownEsc);
+
+
 
 };
 
 function onImgClickOpenModalWindow(e) {
   e.preventDefault();
-  console.log(e.target);
   refs.modalWindov.classList.add('is-open');
-  refs.modalImg.src = `${e.target.src}`;
+  refs.modalImg.src = `${e.target.dataset.source}`;
   refs.modalImg.alt = `${e.target.alt}`;
   refs.closeModalBtn.addEventListener('click', onClickCloseModal);
   window.addEventListener('keydown', onKeydownEsc);
   refs.overlay.addEventListener('click', onClickCloseModal);
+  window.addEventListener('keydown', onKeydownArrow);
 
 };
 
@@ -111,10 +125,3 @@ function createItemGalleryList(gallery) {
 </li>`;
 }).join('');
 };
-
-
-
-
-
-
-
